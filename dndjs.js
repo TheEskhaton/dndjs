@@ -1,5 +1,3 @@
-/* Math.floor((Math.random()*10)+1);  */
-
 var dndjs = (function(){
 	/*Private*/
 	var rollDice = function(diceExpression){

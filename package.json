@@ -1,5 +1,6 @@
 {
     "author":"Alen Genzic",
+    "version": "0.0.1",
     "name": "dndjs",
     "main": "dndjs.js"
 }

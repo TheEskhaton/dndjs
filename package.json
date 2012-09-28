@@ -1,6 +1,9 @@
 {
     "author":"Alen Genzic",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "name": "dndjs",
-    "main": "dndjs.js"
+    "main": "dndjs.js",
+     "dependencies": {
+    "underscore": ">= 1.4.0"
+  	}
 }

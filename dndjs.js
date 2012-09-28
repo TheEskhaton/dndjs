@@ -1,5 +1,6 @@
 var dndjs = (function(){
 	/*Private*/
+	var _= require("underscore");
 	var rollDice = function(diceExpression){
 		var parsedDice = parseDice(diceExpression);
 		var numberOfDies = parsedDice.numberOfDies;
@@ -35,8 +36,8 @@ var dndjs = (function(){
 		var typeOfDie = parseInt(splitExpr[1],10);
 		var modifierAmount = 0;
 		if(diceExpression.indexOf('+')!=-1 || diceExpression.indexOf('-')!=-1 ){
-		var modifier = diceExpression.split(typeOfDie)[1];
-		modifierAmount = parseInt(modifier,10);
+			var modifier = diceExpression.split(typeOfDie)[1];
+			modifierAmount = parseInt(modifier,10);
 		}
 
 		return{
@@ -46,10 +47,51 @@ var dndjs = (function(){
 		};
 	};
 
+	var generateStats = function(){
+		
+		var StatSet = function(str, intel, dex, cha, wis, con){
+			return {
+				str: str,
+				intel: intel,
+				dex: dex,
+				cha:cha,
+				wis: wis,
+				con: con
+			};
+		};
+		var stats = [];
+		for(var i=0;i<6;i++){
+			var roll = rollDice("4d6");
+			var dropLowest= findMinRoll(roll.results);
+			stat = _.reduce(dropLowest,function(memo, num){return memo+num.result},0)
+			stats.push(stat);
+
+		}
+		statSet = new StatSet(stats[0],stats[1],stats[2],stats[3],stats[4],stats[5]);
+		return statSet;
+	};
+	var findMinRoll = function(results){
+			var minRoll = results[0].result;
+			for (var i = results.length - 1; i > 0; i--) {
+				if(results[i].result < minRoll)
+				{
+					minRoll = results[i].result;
+				}
+			}
+			for (var j = results.length - 1; j >= 0; j--) {
+				if(results[j].result == minRoll)
+				{
+					results.splice(results.indexOf(results[j]), 1);
+					break;
+				}
+			};
+			return results;
+	};
+
 	/*public*/
 	return{
-		rollDice: rollDice
+		rollDice: rollDice,
+		generateStats: generateStats
 	};
 })();
-console.log(dndjs.rollDice("3d6+2"));
 module.exports = dndjs;

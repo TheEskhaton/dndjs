@@ -46,10 +46,7 @@ var dndjs = (function(){
 			modifierAmount: modifierAmount
 		};
 	};
-
-	var generateStats = function(){
-		
-		var StatSet = function(str, intel, dex, cha, wis, con){
+	var StatSet = function(str, intel, dex, cha, wis, con){
 			return {
 				str: str,
 				intel: intel,
@@ -57,19 +54,35 @@ var dndjs = (function(){
 				cha:cha,
 				wis: wis,
 				con: con
+				
 			};
 		};
+	var statSetasArray= function(statset){
+					return [str, intel, dex, cha, wis, con];
+				};
+	var generateStats = function(){
 		var stats = [];
 		for(var i=0;i<6;i++){
 			var roll = rollDice("4d6");
 			var dropLowest= findMinRoll(roll.results);
-			stat = _.reduce(dropLowest,function(memo, num){return memo+num.result},0)
+			stat = _.reduce(dropLowest,function(memo, num){return memo+num.result},0);
 			stats.push(stat);
 
 		}
 		statSet = new StatSet(stats[0],stats[1],stats[2],stats[3],stats[4],stats[5]);
 		return statSet;
 	};
+
+	var randomizeStatOrder= function(statset){
+		var rand5 = function(){
+			return Math.floor((Math.random()*5));
+		};
+		var statArray = statSetasArray(statset);
+		var randomArray = statArray.sort(function() { return 0.5 - Math.random();});
+		var newStatSet = new StatSet(randomArray[0],randomArray[1],randomArray[2],randomArray[3],randomArray[4],randomArray[5]);
+		return newStatSet;
+	};
+
 	var findMinRoll = function(results){
 			var minRoll = results[0].result;
 			for (var i = results.length - 1; i > 0; i--) {
@@ -84,14 +97,15 @@ var dndjs = (function(){
 					results.splice(results.indexOf(results[j]), 1);
 					break;
 				}
-			};
+			}
 			return results;
 	};
 
 	/*public*/
 	return{
 		rollDice: rollDice,
-		generateStats: generateStats
+		generateStats: generateStats,
+		randomizeStatOrder: randomizeStatOrder
 	};
 })();
 module.exports = dndjs;
